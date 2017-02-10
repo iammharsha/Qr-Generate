@@ -1,9 +1,22 @@
 from PIL import Image
+from os import listdir
 import os
 
 path="/home/ubuntu/Qrcode"
 
-def merge_images(image1, file2,count2,result):
+def qr11(img,file1):
+	image=Image.open(path+"/"+file1)	
+	(width1, height1) = img.size
+	(width2, height2) = image.size
+    	#(width2, height2) = image2.size
+	result_width = width1 + width2
+  	result_height = max(height1,height2)
+    	result = Image.new('RGB', (result_width, result_height))
+	result.paste(im=img, box=(0, 0))
+    	result.paste(im=image, box=(width1, 0))
+	return result
+
+def merge_images(file2,count2,result):
     """Merge two images into one, displayed side by side
     :param file1: path to first image file
     :param file2: path to second image file
@@ -31,23 +44,24 @@ def merge_images(image1, file2,count2,result):
 
 count=1
 count1=0
-i=1
-img=Image.open("/home/ubuntu/Qrcode/0a0bba.png")
-img=thumbnail((cm(200),cm(200))
+
+#img=Image.open("/home/ubuntu/Qrcode/0a0bba.png")
+#img=thumbnail((cm(200),cm(200))
 #result=Image.new('RGB', (3508, 4961))
 for file in os.listdir(path):
    if file.endswith(".png"):
-	if file=="0a0bba.png":
-		continue
         print(file)
-	img=merge_images(img,file,count,result)
-	count+=1
-	if count==32:	
-		img.save("/home/ubuntu/Images/image"+str(count1)+".png")
-		result=Image.new('RGB', (3508, 4961))
-		count1+=1
-		count=1
-		img=None
+	img=Image.open(path+"/"+file)
+	for i in range(0,10):
+		
+		img=qr11(img,file)
+		i=i+1
+	
+		
+	img.save("/home/ubuntu/Images/image"+str(count1)+".png")
+	count1=count1+1
+	#result=Image.new('RGB', (3508, 4961))	
+	img=None
 
 
 
